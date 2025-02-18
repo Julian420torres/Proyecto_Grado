@@ -10,6 +10,7 @@
     <title>Sistema de ventas - Login</title>
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body class="bg-primary">
@@ -21,40 +22,40 @@
                         <div class="col-lg-5">
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
                                 <div class="card-header">
-                                    <h3 class="text-center font-weight-light my-4">Acceso al sistema</h3>
+                                    <h3 class="text-center font-weight-light my-4">Iniciar Sesión</h3>
                                 </div>
                                 <div class="card-body">
                                     @if ($errors->any())
-                                    @foreach ($errors->all() as $item)
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        {{$item}}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                    @endforeach
+                                        @foreach ($errors->all() as $item)
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                {{ $item }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                        @endforeach
                                     @endif
                                     <form action="/login" method="post">
                                         @csrf
                                         <div class="form-floating mb-3">
-                                            <input autofocus autocomplete="off" value="invitado@gmail.com" class="form-control" name="email" id="inputEmail" type="email" placeholder="name@example.com" />
+                                            <input autofocus autocomplete="off" value="julian@gmail.com"
+                                                class="form-control" name="email" id="inputEmail" type="email"
+                                                placeholder="name@example.com" />
                                             <label for="inputEmail">Correo eléctronico</label>
                                         </div>
-                                        <div class="form-floating mb-3">
-                                            <input class="form-control" name="password" value="12345678" id="inputPassword" type="password" placeholder="Password" />
+                                        <div class="form-floating mb-3 position-relative">
+                                            <input class="form-control" name="password" value="123"
+                                                id="inputPassword" type="password" placeholder="Password" />
                                             <label for="inputPassword">Contraseña</label>
+                                            <button type="button" id="showPasswordBtn"
+                                                class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y"><i
+                                                    class="fas fa-eye"></i></button>
                                         </div>
-                                        <!--div class="form-check mb-3">
-                                                <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
-                                                <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
-                                            </div--->
-                                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                            <!--a class="small" href="password.html">Forgot Password?</a-->
-                                            <button class="btn btn-primary" type="submit"><a>Iniciar sesión</a></button>
+                                        <div
+                                            class="d-flex align-items-center justify-content-center mt-4 mb-0 text-center">
+                                            <button class="btn btn-primary" type="submit">Iniciar sesión</button>
                                         </div>
                                     </form>
                                 </div>
-                                <!---div class="card-footer text-center py-3">
-                                        <div class="small"><a href="register.html">Need an account? Sign up!</a></div>
-                                    </div---->
                             </div>
                         </div>
                     </div>
@@ -65,18 +66,31 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2022</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
+
                     </div>
                 </div>
             </footer>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const passwordInput = document.getElementById("inputPassword");
+            const showPasswordBtn = document.getElementById("showPasswordBtn");
+
+            showPasswordBtn.addEventListener("click", function() {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    showPasswordBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                } else {
+                    passwordInput.type = "password";
+                    showPasswordBtn.innerHTML = '<i class="fas fa-eye"></i>';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
