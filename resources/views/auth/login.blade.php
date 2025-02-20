@@ -37,13 +37,13 @@
                                     <form action="/login" method="post">
                                         @csrf
                                         <div class="form-floating mb-3">
-                                            <input autofocus autocomplete="off" value="julian@gmail.com"
+                                            <input autofocus autocomplete="off" value=""
                                                 class="form-control" name="email" id="inputEmail" type="email"
                                                 placeholder="name@example.com" />
                                             <label for="inputEmail">Correo eléctronico</label>
                                         </div>
                                         <div class="form-floating mb-3 position-relative">
-                                            <input class="form-control" name="password" value="123"
+                                            <input class="form-control" name="password" value=""
                                                 id="inputPassword" type="password" placeholder="Password" />
                                             <label for="inputPassword">Contraseña</label>
                                             <button type="button" id="showPasswordBtn"
