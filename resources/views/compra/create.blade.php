@@ -96,8 +96,8 @@
                                         </tr>
                                         <tr>
                                             <th></th>
-                                            <th colspan="4">IGV %</th>
-                                            <th colspan="2"><span id="igv">0</span></th>
+                                            <th colspan="4">INC %</th>
+                                            <th colspan="2"><span id="inc">0</span></th>
                                         </tr>
                                         <tr>
                                             <th></th>
@@ -127,18 +127,7 @@
                 </div>
                 <div class="p-3 border border-3 border-success">
                     <div class="row">
-                        <!--Proveedor-->
-                        <div class="col-12 mb-2">
-                            <label for="proveedore_id" class="form-label">Proveedor:</label>
-                            <select name="proveedore_id" id="proveedore_id" class="form-control selectpicker show-tick" data-live-search="true" title="Selecciona" data-size='2'>
-                                @foreach ($proveedores as $item)
-                                <option value="{{$item->id}}">{{$item->persona->razon_social}}</option>
-                                @endforeach
-                            </select>
-                            @error('proveedore_id')
-                            <small class="text-danger">{{ '*'.$message }}</small>
-                            @enderror
-                        </div>
+                        
 
                         <!--Tipo de comprobante-->
                         <div class="col-12 mb-2">
@@ -164,7 +153,7 @@
 
                         <!--Impuesto---->
                         <div class="col-sm-6 mb-2">
-                            <label for="impuesto" class="form-label">Impuesto(IGV):</label>
+                            <label for="impuesto" class="form-label">Impuesto(INC):</label>
                             <input readonly type="text" name="impuesto" id="impuesto" class="form-control border-success">
                             @error('impuesto')
                             <small class="text-danger">{{ '*'.$message }}</small>
@@ -238,11 +227,11 @@
     let cont = 0;
     let subtotal = [];
     let sumas = 0;
-    let igv = 0;
+    let inc = 0;
     let total = 0;
 
     //Constantes
-    const impuesto = 18;
+    const impuesto = 8;
 
     function cancelarCompra() {
         //Elimar el tbody de la tabla
@@ -264,12 +253,12 @@
         cont = 0;
         subtotal = [];
         sumas = 0;
-        igv = 0;
+        inc = 0;
         total = 0;
 
         //Mostrar los campos calculados
         $('#sumas').html(sumas);
-        $('#igv').html(igv);
+        $('#inc').html(inc);
         $('#total').html(total);
         $('#impuesto').val(impuesto + '%');
         $('#inputTotal').val(total);
@@ -310,8 +299,8 @@
                     //Calcular valores
                     subtotal[cont] = round(cantidad * precioCompra);
                     sumas += subtotal[cont];
-                    igv = round(sumas / 100 * impuesto);
-                    total = round(sumas + igv);
+                    inc = round(sumas / 100 * impuesto);
+                    total = round(sumas + inc);
 
                     //Crear la fila
                     let fila = '<tr id="fila' + cont + '">' +
@@ -332,9 +321,9 @@
 
                     //Mostrar los campos calculados
                     $('#sumas').html(sumas);
-                    $('#igv').html(igv);
+                    $('#inc').html(inc);
                     $('#total').html(total);
-                    $('#impuesto').val(igv);
+                    $('#impuesto').val(inc);
                     $('#inputTotal').val(total);
                 } else {
                     showModal('Precio de compra incorrecto');
@@ -355,14 +344,14 @@
     function eliminarProducto(indice) {
         //Calcular valores
         sumas -= round(subtotal[indice]);
-        igv = round(sumas / 100 * impuesto);
-        total = round(sumas + igv);
+        inc = round(sumas / 100 * impuesto);
+        total = round(sumas + inc);
 
         //Mostrar los campos calculados
         $('#sumas').html(sumas);
-        $('#igv').html(igv);
+        $('#inc').html(inc);
         $('#total').html(total);
-        $('#impuesto').val(igv);
+        $('#impuesto').val(inc);
         $('#InputTotal').val(total);
 
         //Eliminar el fila de la tabla

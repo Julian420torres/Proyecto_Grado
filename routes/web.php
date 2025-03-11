@@ -6,14 +6,14 @@ use App\Http\Controllers\compraController;
 use App\Http\Controllers\homeController;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\logoutController;
-use App\Http\Controllers\marcaController;
-use App\Http\Controllers\presentacioneController;
+
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\profileController;
-use App\Http\Controllers\proveedorController;
+
 use App\Http\Controllers\roleController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\ventaController;
+use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,11 +30,10 @@ Route::get('/',[homeController::class,'index'])->name('panel');
 
 Route::resources([
     'categorias' => categoriaController::class,
-    'presentaciones' => presentacioneController::class,
-    'marcas' => marcaController::class,
+    
     'productos' => ProductoController::class,
     'clientes' => clienteController::class,
-    'proveedores' => proveedorController::class,
+    'menus' => menuController::class,
     'compras' => compraController::class,
     'ventas' => ventaController::class,
     'users' => userController::class,
@@ -45,6 +44,8 @@ Route::resources([
 Route::get('/login',[loginController::class,'index'])->name('login');
 Route::post('/login',[loginController::class,'login']);
 Route::get('/logout',[logoutController::class,'logout'])->name('logout');
+Route::resource('menus', MenuController::class);
+Route::get('/ventas/obtener-numero-comprobante/{idComprobante}', [VentaController::class, 'obtenerNumeroComprobante']);
 
 Route::get('/401', function () {
     return view('pages.401');

@@ -70,21 +70,7 @@
                 </div>
             </div>
 
-            <!---Proveedor--->
-            <div class="row mb-4">
-                <div class="col-sm-6">
-                    <div class="input-group" id="hide-group">
-                        <span class="input-group-text"><i class="fa-solid fa-user-tie"></i></span>
-                        <input disabled type="text" class="form-control" value="Proveedor: ">
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="input-group">
-                        <span title="Proveedor" id="icon-form" class="input-group-text"><i class="fa-solid fa-user-tie"></i></span>
-                        <input disabled type="text" class="form-control" value="{{$compra->proveedore->persona->razon_social}}">
-                    </div>
-                </div>
-            </div>
+            
 
             <!---Fecha--->
             <div class="row mb-4">

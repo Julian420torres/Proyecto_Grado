@@ -6,7 +6,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endpush
+
 
 @section('content')
 <div class="container-fluid px-4">
@@ -31,44 +33,71 @@
                 <div class="p-3 border border-3 border-primary">
                     <div class="row gy-4">
 
-                        <!-----Producto---->
-                        <div class="col-12">
-                            <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" data-size="1" title="Busque un producto aquí">
-                                @foreach ($productos as $item)
-                                <option value="{{$item->id}}-{{$item->stock}}-{{$item->precio_venta}}">{{$item->codigo.' '.$item->nombre}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <!-- Selección de Producto -->
+<div class="col-12">
+    <label for="producto_id">Seleccionar Producto:</label>
+    <select name="producto_id" id="producto_id" class="form-control selectpicker" data-live-search="true" data-size="1" title="Busque un producto aquí">
+        @foreach ($productos as $item)
+            <option value="{{$item->id}}" data-precio="{{$item->precio_venta}}" data-stock="{{$item->stock}}">
+                {{$item->codigo.' '.$item->nombre}}
+            </option>
+        @endforeach
+    </select>
+</div>
 
-                        <!-----Stock--->
-                        <div class="d-flex justify-content-end">
-                            <div class="col-12 col-sm-6">
-                                <div class="row">
-                                    <label for="stock" class="col-form-label col-4">Stock:</label>
-                                    <div class="col-8">
-                                        <input disabled id="stock" type="text" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<!-- Selección de Menú -->
+<div class="form-group">
+    <label for="menu_id">Seleccionar Menú:</label>
+    <select name="menu_id" id="menu_id" class="form-control selectpicker" data-live-search="true" title="Busque un menú aquí">
+        <option value="">Seleccione un menú</option>
+        @foreach ($menus as $menu)
+            <option value="{{$menu->id}}" data-precio="{{$menu->precio}}">
+                {{$menu->nombre}}
+            </option>
+        @endforeach
+    </select>
+</div>
 
-                        <!-----Precio de venta---->
-                        <div class="col-sm-4">
-                            <label for="precio_venta" class="form-label">Precio de venta:</label>
-                            <input disabled type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1">
-                        </div>
+<!-- Precio del Producto -->
+<div class="col-sm-4">
+    <label for="precio_producto" class="form-label">Precio del Producto:</label>
+    <input type="number" name="precio_producto" id="precio_producto" class="form-control" step="0.1" readonly>
+</div>
 
-                        <!-----Cantidad---->
-                        <div class="col-sm-4">
-                            <label for="cantidad" class="form-label">Cantidad:</label>
-                            <input type="number" name="cantidad" id="cantidad" class="form-control">
-                        </div>
+<!-- Stock -->
+<div class="col-sm-4">  
+    <label for="stock" class="form-label">Stock:</label>   
+    <input disabled id="stock" type="text" class="form-control" step='0.1' reandonly>
+</div>
 
-                        <!----Descuento---->
-                        <div class="col-sm-4">
-                            <label for="descuento" class="form-label">Descuento:</label>
-                            <input type="number" name="descuento" id="descuento" class="form-control">
-                        </div>
+
+<!-- Precio del Menú -->
+<div class="col-sm-4">
+    <label for="precio_menu" class="form-label">Precio del Menú:</label>
+    <input type="number" name="precio_menu" id="precio_menu" class="form-control" step="0.1" readonly>
+</div>
+
+
+
+<!-- Precio de Venta -->
+<div class="col-sm-4">
+    <label for="precio_venta" class="form-label">Precio de venta:</label>
+    <input type="number" name="precio_venta" id="precio_venta" class="form-control" step="0.1" readonly>
+</div>
+
+<!-- Cantidad de Productos -->
+<div class="col-sm-4">
+    <label for="cantidad" class="form-label">Cantidad de productos:</label>
+    <input type="number" name="cantidad" id="cantidad" class="form-control" min="0" value="0">
+</div>
+
+<!-- Cantidad de Platos del Menú -->
+<div class="col-sm-4">
+    <label for="cantidad_menu" class="form-label">Cantidad de Platos del Menú:</label>
+    <input type="number" class="form-control" id="cantidad_menu" name="cantidad_menu" min="0" value="0">
+</div>
+
+                      
 
                         <!-----botón para agregar--->
                         <div class="col-12 text-end">
@@ -76,29 +105,33 @@
                         </div>
 
                         <!-----Tabla para el detalle de la venta--->
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table id="tabla_detalle" class="table table-hover">
+                        <div class="col-12 flex-grow-1">
+                            <div class="table-responsive" style="min-height: 250px; max-height: 500px; overflow-y: auto;">
+                                <table id= "tabla_detalle" width="100%">
                                     <thead class="bg-primary">
                                         <tr>
                                             <th class="text-white">#</th>
-                                            <th class="text-white">Producto</th>
-                                            <th class="text-white">Cantidad</th>
-                                            <th class="text-white">Precio venta</th>
-                                            <th class="text-white">Descuento</th>
+                                            <th class="text-white">Prod</th>
+                                            <th class="text-white">#Prod</th>
+                                            <th class="text-white">VProd</th>
+                                            <th class="text-white">Menu</th>
+                                            <th class="text-white">#Menu</th>
+                                            <th class="text-white">VMenu</th>
                                             <th class="text-white">Subtotal</th>
-                                            <th></th>
+                                            
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th></th>
+                                    <tbody class="col-xl-8">
+                                        <tr class="col-xl-8" >
                                             <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            
                                         </tr>
                                     </tbody>
                                     <tfoot>
@@ -109,8 +142,8 @@
                                         </tr>
                                         <tr>
                                             <th></th>
-                                            <th colspan="4">IGV %</th>
-                                            <th colspan="2"><span id="igv">0</span></th>
+                                            <th colspan="4">INC %</th>
+                                            <th colspan="2"><span id="inc">0</span></th>
                                         </tr>
                                         <tr>
                                             <th></th>
@@ -153,31 +186,32 @@
                             @enderror
                         </div>
 
-                        <!--Tipo de comprobante-->
-                        <div class="col-12">
-                            <label for="comprobante_id" class="form-label">Comprobante:</label>
-                            <select name="comprobante_id" id="comprobante_id" class="form-control selectpicker" title="Selecciona">
-                                @foreach ($comprobantes as $item)
-                                <option value="{{$item->id}}">{{$item->tipo_comprobante}}</option>
-                                @endforeach
-                            </select>
-                            @error('comprobante_id')
-                            <small class="text-danger">{{ '*'.$message }}</small>
-                            @enderror
-                        </div>
+                       <!-- Tipo de comprobante -->
+<div class="col-12">
+    <label for="comprobante_id" class="form-label">Comprobante:</label>
+    <select name="comprobante_id" id="comprobante_id" class="form-control selectpicker" title="Selecciona">
+        <option value="">Seleccione</option> <!-- Opción vacía para obligar a seleccionar -->
+        @foreach ($comprobantes as $item)
+            <option value="{{ $item->id }}">{{ $item->tipo_comprobante }}</option>
+        @endforeach
+    </select>
+    @error('comprobante_id')
+        <small class="text-danger">{{ '*'.$message }}</small>
+    @enderror
+</div>
 
-                        <!--Numero de comprobante-->
-                        <div class="col-12">
-                            <label for="numero_comprobante" class="form-label">Numero de comprobante:</label>
-                            <input required type="text" name="numero_comprobante" id="numero_comprobante" class="form-control">
-                            @error('numero_comprobante')
-                            <small class="text-danger">{{ '*'.$message }}</small>
-                            @enderror
-                        </div>
+<!-- Número de comprobante -->
+<div class="col-12">
+    <label for="numero_comprobante" class="form-label">Número de comprobante:</label>
+    <input required type="text" name="numero_comprobante" id="numero_comprobante" class="form-control" readonly>
+    @error('numero_comprobante')
+        <small class="text-danger">{{ '*'.$message }}</small>
+    @enderror
+</div>
 
                         <!--Impuesto---->
                         <div class="col-sm-6">
-                            <label for="impuesto" class="form-label">Impuesto(IGV):</label>
+                            <label for="impuesto" class="form-label">Impuesto(INC):</label>
                             <input readonly type="text" name="impuesto" id="impuesto" class="form-control border-success">
                             @error('impuesto')
                             <small class="text-danger">{{ '*'.$message }}</small>
@@ -236,14 +270,14 @@
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 <script>
+    
+    let productoSelect, menuSelect, precioVentaInput, stockInput;
     $(document).ready(function() {
 
         $('#producto_id').change(mostrarValores);
 
 
-        $('#btn_agregar').click(function() {
-            agregarProducto();
-        });
+        
 
         $('#btnCancelarVenta').click(function() {
             cancelarVenta();
@@ -258,11 +292,11 @@
     let cont = 0;
     let subtotal = [];
     let sumas = 0;
-    let igv = 0;
+    let inc = 0;
     let total = 0;
 
     //Constantes
-    const impuesto = 18;
+    const impuesto = 8;
 
     function mostrarValores() {
         let dataProducto = document.getElementById('producto_id').value.split('-');
@@ -271,82 +305,139 @@
     }
 
     function agregarProducto() {
-        let dataProducto = document.getElementById('producto_id').value.split('-');
-        //Obtener valores de los campos
-        let idProducto = dataProducto[0];
-        let nameProducto = $('#producto_id option:selected').text();
-        let cantidad = $('#cantidad').val();
-        let precioVenta = $('#precio_venta').val();
-        let descuento = $('#descuento').val();
-        let stock = $('#stock').val();
+    console.log("🚀 Intentando agregar producto...");
 
-        if (descuento == '') {
-            descuento = 0;
-        }
+    const productoSelect = document.getElementById("producto_id");
+    const menuSelect = document.getElementById("menu_id");
+    const cantidadInput = document.getElementById("cantidad");
+    const cantidadMenuInput = document.getElementById("cantidad_menu");
+    const precioProductoInput = document.getElementById("precio_producto");
+    const precioMenuInput = document.getElementById("precio_menu");
+    const stockInput = document.getElementById("stock");
+    const tablaDetalle = document.getElementById("tabla_detalle").getElementsByTagName("tbody")[0];
 
-        //Validaciones 
-        //1.Para que los campos no esten vacíos
-        if (idProducto != '' && cantidad != '') {
-
-            //2. Para que los valores ingresados sean los correctos
-            if (parseInt(cantidad) > 0 && (cantidad % 1 == 0) && parseFloat(descuento) >= 0) {
-
-                //3. Para que la cantidad no supere el stock
-                if (parseInt(cantidad) <= parseInt(stock)) {
-                    //Calcular valores
-                    subtotal[cont] = round(cantidad * precioVenta - descuento);
-                    sumas += subtotal[cont];
-                    igv = round(sumas / 100 * impuesto);
-                    total = round(sumas + igv);
-
-                    //Crear la fila
-                    let fila = '<tr id="fila' + cont + '">' +
-                        '<th>' + (cont + 1) + '</th>' +
-                        '<td><input type="hidden" name="arrayidproducto[]" value="' + idProducto + '">' + nameProducto + '</td>' +
-                        '<td><input type="hidden" name="arraycantidad[]" value="' + cantidad + '">' + cantidad + '</td>' +
-                        '<td><input type="hidden" name="arrayprecioventa[]" value="' + precioVenta + '">' + precioVenta + '</td>' +
-                        '<td><input type="hidden" name="arraydescuento[]" value="' + descuento + '">' + descuento + '</td>' +
-                        '<td>' + subtotal[cont] + '</td>' +
-                        '<td><button class="btn btn-danger" type="button" onClick="eliminarProducto(' + cont + ')"><i class="fa-solid fa-trash"></i></button></td>' +
-                        '</tr>';
-
-                    //Acciones después de añadir la fila
-                    $('#tabla_detalle').append(fila);
-                    limpiarCampos();
-                    cont++;
-                    disableButtons();
-
-                    //Mostrar los campos calculados
-                    $('#sumas').html(sumas);
-                    $('#igv').html(igv);
-                    $('#total').html(total);
-                    $('#impuesto').val(igv);
-                    $('#inputTotal').val(total);
-                } else {
-                    showModal('Cantidad incorrecta');
-                }
-
-            } else {
-                showModal('Valores incorrectos');
-            }
-
-        } else {
-            showModal('Le faltan campos por llenar');
-        }
-
+    if (!productoSelect || !menuSelect || !cantidadInput || !precioProductoInput || !precioMenuInput || !stockInput || !tablaDetalle || !cantidadMenuInput) {
+        console.error("❌ Error: No se encontraron todos los elementos en el DOM.");
+        return;
     }
+
+    if (!productoSelect.value && !menuSelect.value) {
+        alert("Debe seleccionar al menos un producto o un menú.");
+        return;
+    }
+
+    let idProducto = productoSelect.value ? productoSelect.value : null;
+    let idMenu = menuSelect.value ? menuSelect.value : null;
+    let nameProducto = productoSelect.options[productoSelect.selectedIndex]?.text || "-";
+    let nameMenu = menuSelect.options[menuSelect.selectedIndex]?.text || "-";
+    let cantidadProducto = parseInt(cantidadInput.value) || 0;
+    let cantidadMenu = parseInt(cantidadMenuInput.value) || 0;
+    let precioProducto = parseFloat(precioProductoInput.value) || 0;
+    let precioMenu = parseFloat(precioMenuInput.value) || 0;
+    let stock = parseInt(stockInput.value) || 0;
+
+    console.log("🔹 ID Producto:", idProducto);
+    console.log("🔹 ID Menú:", idMenu);
+    console.log("🔹 Cantidad Producto:", cantidadProducto);
+    console.log("🔹 Cantidad Menú:", cantidadMenu);
+    console.log("🔹 Precio Producto:", precioProducto);
+    console.log("🔹 Precio Menú:", precioMenu);
+    console.log("🔹 Stock:", stock);
+
+    // Validaciones
+    if (!idProducto && !idMenu) {
+        showModal('⚠️ Debe seleccionar un producto o un menú.');
+        return;
+    }
+
+    if (idProducto && cantidadProducto <= 0) {
+        alert("Debe ingresar una cantidad válida de productos.");
+        return;
+    }
+
+    if (idMenu && cantidadMenu <= 0) {
+        alert("Debe ingresar una cantidad válida de menús.");
+        return;
+    }
+
+    if (precioProducto <= 0 && precioMenu <= 0) {
+        showModal('⚠️ El precio de venta debe ser mayor a 0.');
+        return;
+    }
+
+    if (idProducto && cantidadProducto > stock) {
+        showModal('❌ La cantidad ingresada supera el stock disponible.');
+        return;
+    }
+
+    // Calcular precio_venta (subtotal por fila)
+    let precioVenta = (cantidadProducto * precioProducto) + (cantidadMenu * precioMenu);
+    subtotal[cont] = round(precioVenta);
+    sumas += subtotal[cont];
+    inc = round(sumas / 100 * impuesto);
+    total = round(sumas + inc);
+
+    console.log("🟢 Precio de venta calculado:", precioVenta);
+
+    // Crear la fila
+    let fila = `<tr id="fila${cont}">`;
+    fila += `<th>${cont + 1}</th>`;
+
+    // Producto
+    if (idProducto) {
+        fila += `<td><input type="hidden" name="arrayidproducto[]" value="${idProducto}">${nameProducto}</td>`;
+        fila += `<td><input type="hidden" name="arraycantidadproducto[]" value="${cantidadProducto}">${cantidadProducto}</td>`;
+        fila += `<td><input type="hidden" name="arrayprecioventaproducto[]" value="${precioProducto}">${precioProducto}</td>`;
+    } else {
+        fila += `<td>-</td><td>-</td><td>-</td>`;
+    }
+
+    // Menú
+    if (idMenu) {
+        fila += `<td><input type="hidden" name="arrayidmenu[]" value="${idMenu}">${nameMenu}</td>`;
+        fila += `<td><input type="hidden" name="arraycantidadmenu[]" value="${cantidadMenu}">${cantidadMenu}</td>`;
+        fila += `<td><input type="hidden" name="arrayprecioventamenu[]" value="${precioMenu}">${precioMenu}</td>`;
+    } else {
+        fila += `<td>-</td><td>-</td><td>-</td>`;
+    }
+
+    fila += `<td><input type="hidden" name="arrayprecioventa[]" value="${precioVenta}">${precioVenta}</td>`;
+    
+    fila += `<td><button class="btn btn-danger" type="button" onClick="eliminarProducto(${cont})"><i class="fa-solid fa-trash"></i></button></td>`;
+    fila += `</tr>`;
+
+    // Agregar la fila a la tabla
+    $('#tabla_detalle').append(fila);
+    limpiarCampos();
+    cont++;
+    disableButtons();
+
+    // Actualizar totales
+    if (!isNaN(sumas) && !isNaN(inc) && !isNaN(total)) {
+        $('#sumas').html(sumas.toFixed(2));
+        $('#inc').html(inc.toFixed(2));
+        $('#total').html(total.toFixed(2));
+        $('#impuesto').val(inc.toFixed(2));
+        $('#inputTotal').val(total.toFixed(2));
+
+        $("#precio_venta").val(total.toFixed(2)); // Se actualiza el input global con el total
+    } else {
+        console.warn("⚠️ Error en el cálculo de totales. Verifique los valores ingresados.");
+    }
+}
+
 
     function eliminarProducto(indice) {
         //Calcular valores
         sumas -= round(subtotal[indice]);
-        igv = round(sumas / 100 * impuesto);
-        total = round(sumas + igv);
+        inc = round(sumas / 100 * impuesto);
+        total = round(sumas + inc);
 
         //Mostrar los campos calculados
         $('#sumas').html(sumas);
-        $('#igv').html(igv);
+        $('#inc').html(inc);
         $('#total').html(total);
-        $('#impuesto').val(igv);
+        $('#impuesto').val(inc);
         $('#InputTotal').val(total);
 
         //Eliminar el fila de la tabla
@@ -368,6 +459,7 @@
             '<td></td>' +
             '<td></td>' +
             '<td></td>' +
+            '<td></td>' +
             '</tr>';
         $('#tabla_detalle').append(fila);
 
@@ -375,12 +467,12 @@
         cont = 0;
         subtotal = [];
         sumas = 0;
-        igv = 0;
+        inc = 0;
         total = 0;
 
         //Mostrar los campos calculados
         $('#sumas').html(sumas);
-        $('#igv').html(igv);
+        $('#inc').html(inc);
         $('#total').html(total);
         $('#impuesto').val(impuesto + '%');
         $('#inputTotal').val(total);
@@ -404,7 +496,7 @@
         select.selectpicker('val', '');
         $('#cantidad').val('');
         $('#precio_venta').val('');
-        $('#descuento').val('');
+        
         $('#stock').val('');
     }
 
@@ -439,6 +531,94 @@
         num = num.toString().split('e');
         return signo * (num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
     }
+
+    
+
+  
+    document.addEventListener("DOMContentLoaded", function () {
+    console.log("🚀 DOM completamente cargado.");
+
+    const productoSelect = document.getElementById("producto_id");
+    const menuSelect = document.getElementById("menu_id");
+    const precioProductoInput = document.getElementById("precio_producto");
+    const precioMenuInput = document.getElementById("precio_menu");
+    const stockInput = document.getElementById("stock");
+    const precioVentaInput = document.getElementById("precio_venta");
+    const cantidadProductoInput = document.getElementById("cantidad");
+    const cantidadMenuInput = document.getElementById("cantidad_menu");
+
+    // Verificar si los elementos existen
+    if (!productoSelect || !menuSelect || !precioProductoInput || !precioMenuInput || !stockInput || !precioVentaInput || !cantidadProductoInput || !cantidadMenuInput) {
+        console.error("❌ Error: No se encontraron algunos elementos en el DOM.");
+        return;
+    }
+
+    console.log("✅ Selects de productos y menú encontrados.");
+
+    // Función para actualizar los precios y stock
+    function actualizarValores() {
+    const productoSelect = document.getElementById("producto_id");
+    const menuSelect = document.getElementById("menu_id");
+    const cantidadProductoInput = document.getElementById("cantidad");
+    const cantidadMenuInput = document.getElementById("cantidad_menu");
+    const precioProductoInput = document.getElementById("precio_producto");
+    const precioMenuInput = document.getElementById("precio_menu");
+    const precioVentaInput = document.getElementById("precio_venta");
+    const stockInput = document.getElementById("stock");
+
+    let precioProducto = 0, precioMenu = 0, stockProducto = "";
+
+    // Obtener datos del producto seleccionado
+    if (productoSelect.value) {
+        let productoSeleccionado = productoSelect.options[productoSelect.selectedIndex];
+        precioProducto = parseFloat(productoSeleccionado.getAttribute("data-precio")) || 0;
+        stockProducto = productoSeleccionado.getAttribute("data-stock") || "";
+    }
+
+    // Obtener datos del menú seleccionado
+    if (menuSelect.value) {
+        let menuSeleccionado = menuSelect.options[menuSelect.selectedIndex];
+        precioMenu = parseFloat(menuSeleccionado.getAttribute("data-precio")) || 0;
+    }
+
+    // Mostrar precios y stock
+    precioProductoInput.value = precioProducto.toFixed(2);
+    precioMenuInput.value = precioMenu.toFixed(2);
+    stockInput.value = stockProducto;
+
+    // Calcular total correctamente
+    let cantidadProducto = parseInt(cantidadProductoInput.value) || 0;
+    let cantidadMenu = parseInt(cantidadMenuInput.value) || 0;
+    let totalVenta = (precioProducto * cantidadProducto) + (precioMenu * cantidadMenu);
+    precioVentaInput.value = totalVenta.toFixed(2);
+}
+
+    // Asignar eventos a los select y a los inputs de cantidad
+    productoSelect.addEventListener("change", actualizarValores);
+    menuSelect.addEventListener("change", actualizarValores);
+    cantidadProductoInput.addEventListener("input", actualizarValores);
+    cantidadMenuInput.addEventListener("input", actualizarValores);
+
+    // Llamar a la función inicialmente para mostrar valores al cargar la página
+    actualizarValores();
+});
+
+document.getElementById('comprobante_id').addEventListener('change', function() {
+    let idComprobante = this.value;
+
+    if (idComprobante) {
+        fetch(`/ventas/obtener-numero-comprobante/${idComprobante}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('numero_comprobante').value = data.numero_comprobante;
+        })
+        .catch(error => console.error('Error:', error));
+    } else {
+        document.getElementById('numero_comprobante').value = ''; // Si no selecciona, deja vacío
+    }
+});
+
+
     //Fuente: https://es.stackoverflow.com/questions/48958/redondear-a-dos-decimales-cuando-sea-necesario
 </script>
 @endpush

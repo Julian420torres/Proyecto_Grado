@@ -159,64 +159,69 @@
 
 
     <!---Tabla--->
-    <div class="card mb-2">
-        <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            Tabla de detalle de la venta
-        </div>
-        <div class="card-body table-responsive">
-            <table class="table table-striped">
-                <thead class="bg-primary text-white">
-                    <tr class="align-top">
-                        <th class="text-white">Producto</th>
-                        <th class="text-white">Cantidad</th>
-                        <th class="text-white">Precio de venta</th>
-                        <th class="text-white">Descuento</th>
-                        <th class="text-white">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($venta->productos as $item)
-                    <tr>
-                        <td>
-                            {{$item->nombre}}
-                        </td>
-                        <td>
-                            {{$item->pivot->cantidad}}
-                        </td>
-                        <td>
-                            {{$item->pivot->precio_venta}}
-                        </td>
-                        <td>
-                            {{$item->pivot->descuento}}
-                        </td>
-                        <td class="td-subtotal">
-                            {{($item->pivot->cantidad) * ($item->pivot->precio_venta) - ($item->pivot->descuento)}}
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="5"></th>
-                    </tr>
-                    <tr>
-                        <th colspan="4">Sumas:</th>
-                        <th id="th-suma"></th>
-                    </tr>
-                    <tr>
-                        <th colspan="4">IGV:</th>
-                        <th id="th-igv"></th>
-                    </tr>
-                    <tr>
-                        <th colspan="4">Total:</th>
-                        <th id="th-total"></th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+<div class="card mb-2">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Tabla de detalle de la venta
     </div>
+    <div class="card-body table-responsive">
+        <table class="table table-striped">
+            <thead class="bg-primary text-white">
+                <tr class="align-top">
+                    <th class="text-white">#</th>
+                    <th class="text-white">Producto</th>
+                    <th class="text-white">Menu</th>
+                    <th class="text-white">Cantidad_Producto</th>
+                    <th class="text-white">Cantidad_Menu</th>
+                    <th class="text-white">Precio_Venta</th>
+                    <th class="text-white">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php $contador = 1; @endphp
+                
+                @foreach ($venta->productos as $producto)
+                    <tr>
+                        <td>{{ $contador }}</td>
+                        <td>{{ $producto->nombre }}</td>
+                        <td>-</td> <!-- No es un menú, así que dejamos vacío -->
+                        <td>{{ $producto->pivot->cantidad }}</td>
+                        <td>-</td> <!-- No aplica cantidad de menú -->
+                        <td>{{ $producto->pivot->precio_venta }}</td>
+                        <td>{{ $producto->pivot->cantidad * $producto->pivot->precio_venta }}</td>
+                    </tr>
+                    @php $contador++; @endphp
+                @endforeach
 
+                @foreach ($venta->menus as $menu)
+                    <tr>
+                        <td>{{ $contador }}</td>
+                        <td>-</td> <!-- No es un producto, así que dejamos vacío -->
+                        <td>{{ $menu->nombre }}</td>
+                        <td>-</td> <!-- No aplica cantidad de producto -->
+                        <td>{{ $menu->pivot->cantidad }}</td>
+                        <td>{{ $menu->pivot->precio_unitario }}</td>
+                        <td>{{ $menu->pivot->cantidad * $menu->pivot->precio_unitario }}</td>
+                    </tr>
+                    @php $contador++; @endphp
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="6">Sumas:</th>
+                    <th>{{ $venta->productos->sum(fn($p) => $p->pivot->cantidad * $p->pivot->precio_venta) + $venta->menus->sum(fn($m) => $m->pivot->cantidad * $m->pivot->precio_unitario) }}</th>
+                </tr>
+                <tr>
+                    <th colspan="6">INC %:</th>
+                    <th>{{ $venta->impuesto }}</th>
+                </tr>
+                <tr>
+                    <th colspan="6">Total:</th>
+                    <th>{{ $venta->total }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>
 @endsection
 
@@ -237,7 +242,7 @@
         }
 
         $('#th-suma').html(cont);
-        $('#th-igv').html(impuesto);
+        $('#th-inc').html(impuesto);
         $('#th-total').html(round(cont + parseFloat(impuesto)));
     }
 

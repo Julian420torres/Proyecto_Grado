@@ -25,6 +25,12 @@ class Venta extends Model
 
     public function productos(){
         return $this->belongsToMany(Producto::class)->withTimestamps()
-        ->withPivot('cantidad','precio_venta','descuento');
+        ->withPivot('cantidad','precio_venta');
+    }
+
+    public function menus(){
+        return $this->belongsToMany(Menu::class, 'menu_venta')
+            ->withTimestamps()
+            ->withPivot('cantidad', 'precio_unitario');
     }
 }

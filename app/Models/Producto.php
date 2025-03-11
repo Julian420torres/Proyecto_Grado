@@ -15,8 +15,6 @@ class Producto extends Model
         'nombre',
         'descripcion',
         'fecha_vencimiento',
-        'marca_id',
-        'presentacione_id',
         'img_path'
     ];
 
@@ -29,7 +27,7 @@ class Producto extends Model
     public function ventas()
     {
         return $this->belongsToMany(Venta::class)->withTimestamps()
-            ->withPivot('cantidad', 'precio_venta', 'descuento');
+            ->withPivot('cantidad', 'precio_venta');
     }
 
     public function categorias()
@@ -37,15 +35,9 @@ class Producto extends Model
         return $this->belongsToMany(Categoria::class)->withTimestamps();
     }
 
-    public function marca()
-    {
-        return $this->belongsTo(Marca::class);
-    }
+   
 
-    public function presentacione()
-    {
-        return $this->belongsTo(Presentacione::class);
-    }
+    
 
     public function handleUploadImage($image)
     {

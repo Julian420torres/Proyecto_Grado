@@ -42,7 +42,7 @@
                 <thead>
                     <tr>
                         <th>Comprobante</th>
-                        <th>Proveedor</th>
+                        
                         <th>Fecha y hora</th>
                         <th>Total</th>
                         <th>Acciones</th>
@@ -55,10 +55,7 @@
                             <p class="fw-semibold mb-1">{{$item->comprobante->tipo_comprobante}}</p>
                             <p class="text-muted mb-0">{{$item->numero_comprobante}}</p>
                         </td>
-                        <td>
-                            <p class="fw-semibold mb-1">{{ ucfirst($item->proveedore->persona->tipo_persona) }}</p>
-                            <p class="text-muted mb-0">{{$item->proveedore->persona->razon_social}}</p>
-                        </td>
+                        
                         <td>
                             <div class="row-not-space">
                                 <p class="fw-semibold mb-1"><span class="m-1"><i class="fa-solid fa-calendar-days"></i></span>{{\Carbon\Carbon::parse($item->fecha_hora)->format('d-m-Y')}}</p>

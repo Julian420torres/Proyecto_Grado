@@ -15,12 +15,10 @@ class Compra extends Model
         'numero_comprobante',
         'total',
         'comprobante_id',
-        'proveedore_id'
+        
     ];
 
-    public function proveedore(){
-        return $this->belongsTo(Proveedore::class);
-    }
+    
 
     public function comprobante(){
         return $this->belongsTo(Comprobante::class);

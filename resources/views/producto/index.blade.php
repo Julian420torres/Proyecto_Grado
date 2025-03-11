@@ -40,8 +40,8 @@
                     <tr>
                         <th>Código</th>
                         <th>Nombre</th>
-                        <th>Marca</th>
-                        <th>Presentación</th>
+                        
+                        
                         <th>Categorías</th>
                         <th>Estado</th>
                         <th>Acciones</th>
@@ -56,12 +56,8 @@
                         <td>
                             {{$item->nombre}}
                         </td>
-                        <td>
-                            {{$item->marca->caracteristica->nombre}}
-                        </td>
-                        <td>
-                            {{$item->presentacione->caracteristica->nombre}}
-                        </td>
+                       
+                        
                         <td>
                             @foreach ($item->categorias as $category)
                             <div class="container" style="font-size: small;">

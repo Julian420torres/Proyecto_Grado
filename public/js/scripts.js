@@ -7,6 +7,7 @@
 // Scripts
 // 
 
+
 window.addEventListener('DOMContentLoaded', event => {
 
     // Toggle the side navigation
@@ -23,4 +24,19 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const botonAgregar = document.getElementById("btn_agregar");
+    
+    if (botonAgregar) {
+        if (typeof agregarProducto === "function") {
+            botonAgregar.addEventListener("click", agregarProducto);
+            console.log("✅ Botón 'Agregar' encontrado y evento asignado.");
+        } else {
+            console.warn("⚠️ La función agregarProducto no está definida aún.");
+        }
+    } else {
+        console.log("❌ No se encontró el botón 'Agregar'");
+    }
 });

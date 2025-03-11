@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
 use App\Models\Categoria;
-use App\Models\Marca;
-use App\Models\Presentacione;
+
+
 use App\Models\Producto;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +26,7 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        $productos = Producto::with(['categorias.caracteristica','marca.caracteristica','presentacione.caracteristica'])->latest()->get();
+        $productos = Producto::with(['categorias.caracteristica',])->latest()->get();
     
         return view('producto.index',compact('productos'));
     }
@@ -36,22 +36,16 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        $marcas = Marca::join('caracteristicas as c', 'marcas.caracteristica_id', '=', 'c.id')
-            ->select('marcas.id as id', 'c.nombre as nombre')
-            ->where('c.estado', 1)
-            ->get();
+        
 
-        $presentaciones = Presentacione::join('caracteristicas as c', 'presentaciones.caracteristica_id', '=', 'c.id')
-            ->select('presentaciones.id as id', 'c.nombre as nombre')
-            ->where('c.estado', 1)
-            ->get();
+        
 
         $categorias = Categoria::join('caracteristicas as c', 'categorias.caracteristica_id', '=', 'c.id')
             ->select('categorias.id as id', 'c.nombre as nombre')
             ->where('c.estado', 1)
             ->get();
 
-        return view('producto.create', compact('marcas', 'presentaciones', 'categorias'));
+        return view('producto.create', compact('categorias'));
     }
 
     /**
@@ -76,8 +70,8 @@ class ProductoController extends Controller
                 'descripcion' => $request->descripcion,
                 'fecha_vencimiento' => $request->fecha_vencimiento,
                 'img_path' => $name,
-                'marca_id' => $request->marca_id,
-                'presentacione_id' => $request->presentacione_id
+                
+                
             ]);
 
             $producto->save();
@@ -108,22 +102,16 @@ class ProductoController extends Controller
      */
     public function edit(Producto $producto)
     {
-        $marcas = Marca::join('caracteristicas as c', 'marcas.caracteristica_id', '=', 'c.id')
-            ->select('marcas.id as id', 'c.nombre as nombre')
-            ->where('c.estado', 1)
-            ->get();
+        
 
-        $presentaciones = Presentacione::join('caracteristicas as c', 'presentaciones.caracteristica_id', '=', 'c.id')
-            ->select('presentaciones.id as id', 'c.nombre as nombre')
-            ->where('c.estado', 1)
-            ->get();
+        
 
         $categorias = Categoria::join('caracteristicas as c', 'categorias.caracteristica_id', '=', 'c.id')
             ->select('categorias.id as id', 'c.nombre as nombre')
             ->where('c.estado', 1)
             ->get();
 
-        return view('producto.edit',compact('producto','marcas','presentaciones','categorias'));
+        return view('producto.edit',compact('producto','categorias'));
     }
 
     /**
@@ -152,8 +140,8 @@ class ProductoController extends Controller
                 'descripcion' => $request->descripcion,
                 'fecha_vencimiento' => $request->fecha_vencimiento,
                 'img_path' => $name,
-                'marca_id' => $request->marca_id,
-                'presentacione_id' => $request->presentacione_id
+                
+                
             ]);
 
             $producto->save();

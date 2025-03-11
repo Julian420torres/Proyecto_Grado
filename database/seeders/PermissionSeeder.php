@@ -32,17 +32,13 @@ class PermissionSeeder extends Seeder
             'mostrar-compra',
             'eliminar-compra',
 
-            //Marca
-            'ver-marca',
-            'crear-marca',
-            'editar-marca',
-            'eliminar-marca',
-
-            //Presentacione
-            'ver-presentacione',
-            'crear-presentacione',
-            'editar-presentacione',
-            'eliminar-presentacione',
+            //Menu
+            'ver-menu',
+            'crear-menu',
+            'editar-menu',
+            'eliminar-menu',
+            
+            
 
             //Producto
             'ver-producto',
@@ -50,11 +46,7 @@ class PermissionSeeder extends Seeder
             'editar-producto',
             'eliminar-producto',
 
-            //Proveedore
-            'ver-proveedore',
-            'crear-proveedore',
-            'editar-proveedore',
-            'eliminar-proveedore',
+           
 
             //Venta
             'ver-venta',

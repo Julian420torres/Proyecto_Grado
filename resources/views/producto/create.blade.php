@@ -73,31 +73,9 @@
                         @enderror
                     </div>
 
-                    <!---Marca---->
-                    <div class="col-md-6">
-                        <label for="marca_id" class="form-label">Marca:</label>
-                        <select data-size="4" title="Seleccione una marca" data-live-search="true" name="marca_id" id="marca_id" class="form-control selectpicker show-tick">
-                            @foreach ($marcas as $item)
-                            <option value="{{$item->id}}" {{ old('marca_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
-                            @endforeach
-                        </select>
-                        @error('marca_id')
-                        <small class="text-danger">{{'*'.$message}}</small>
-                        @enderror
-                    </div>
+                    
 
-                    <!---Presentaciones---->
-                    <div class="col-md-6">
-                        <label for="presentacione_id" class="form-label">Presentación:</label>
-                        <select data-size="4" title="Seleccione una presentación" data-live-search="true" name="presentacione_id" id="presentacione_id" class="form-control selectpicker show-tick">
-                            @foreach ($presentaciones as $item)
-                            <option value="{{$item->id}}" {{ old('presentacione_id') == $item->id ? 'selected' : '' }}>{{$item->nombre}}</option>
-                            @endforeach
-                        </select>
-                        @error('presentacione_id')
-                        <small class="text-danger">{{'*'.$message}}</small>
-                        @enderror
-                    </div>
+                    
 
                     <!---Categorías---->
                     <div class="col-md-6">
