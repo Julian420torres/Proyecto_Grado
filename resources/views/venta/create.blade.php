@@ -135,22 +135,30 @@
                                         </tr>
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <th></th>
-                                            <th colspan="4">Sumas</th>
-                                            <th colspan="2"><span id="sumas">0</span></th>
-                                        </tr>
-                                        <tr>
-                                            <th></th>
-                                            <th colspan="4">INC %</th>
-                                            <th colspan="2"><span id="inc">0</span></th>
-                                        </tr>
-                                        <tr>
-                                            <th></th>
-                                            <th colspan="4">Total</th>
-                                            <th colspan="2"> <input type="hidden" name="total" value="0" id="inputTotal"> <span id="total">0</span></th>
-                                        </tr>
-                                    </tfoot>
+    <tr>
+        <th></th>
+        <th colspan="4">Sumas</th>
+        <th colspan="2"><span id="sumas">0</span></th>
+    </tr>
+    <tr>
+        <th></th>
+        <th colspan="4">INC (8%)</th>
+        <th colspan="2"><span id="inc">0</span></th>
+    </tr>
+    <tr>
+        <th></th>
+        <th colspan="4">IVA (19%)</th>
+        <th colspan="2"><span id="iva">0</span></th>
+    </tr>
+    <tr>
+        <th></th>
+        <th colspan="4">Total</th>
+        <th colspan="2">
+            <input type="hidden" name="total" value="0" id="inputTotal">
+            <span id="total">0</span>
+        </th>
+    </tr>
+</tfoot>
                                 </table>
                             </div>
                         </div>
@@ -209,14 +217,21 @@
     @enderror
 </div>
 
-                        <!--Impuesto---->
-                        <div class="col-sm-6">
-                            <label for="impuesto" class="form-label">Impuesto(INC):</label>
-                            <input readonly type="text" name="impuesto" id="impuesto" class="form-control border-success">
-                            @error('impuesto')
-                            <small class="text-danger">{{ '*'.$message }}</small>
-                            @enderror
-                        </div>
+                        <!-- Impuesto -->
+<div class="col-sm-6">
+    <label for="impuesto" class="form-label">Total Impuesto:</label>
+    <input readonly type="text" name="impuesto" id="impuesto" class="form-control border-success">
+    @error('impuesto')
+    <small class="text-danger">{{ '*'.$message }}</small>
+    @enderror
+</div>
+
+<!-- Opciones de Impuesto -->
+<div class="col-sm-6">
+    <label class="form-label">Aplicar Impuestos:</label><br>
+    <input type="checkbox" id="aplicar_inc"> INC (8%)  
+    <input type="checkbox" id="aplicar_iva"> IVA (19%)  
+</div>
 
                         <!--Fecha--->
                         <div class="col-sm-6">
@@ -275,28 +290,31 @@
     $(document).ready(function() {
 
         $('#producto_id').change(mostrarValores);
-
-
-        
-
         $('#btnCancelarVenta').click(function() {
             cancelarVenta();
         });
 
         disableButtons();
 
-        $('#impuesto').val(impuesto + '%');
+        // Inicializar los impuestos
+        $('#impuesto').val('0');
+        calcularImpuestos();
+
+        // Detectar cambios en los checkbox de impuestos
+        $('#aplicar_inc, #aplicar_iva').change(calcularImpuestos);
     });
 
-    //Variables
+    // Variables
     let cont = 0;
     let subtotal = [];
     let sumas = 0;
     let inc = 0;
+    let iva = 0;
     let total = 0;
 
-    //Constantes
-    const impuesto = 8;
+    // Constantes
+    const incPorcentaje = 8;  // INC 8%
+    const ivaPorcentaje = 19; // IVA 19%
 
     function mostrarValores() {
         let dataProducto = document.getElementById('producto_id').value.split('-');
@@ -304,9 +322,42 @@
         $('#precio_venta').val(dataProducto[2]);
     }
 
+    function calcularImpuestos() {
+        let subtotalProductos = obtenerSubtotalProductos(); // Obtener subtotal de productos
+        let subtotalMenus = obtenerSubtotalMenus(); // Obtener subtotal de menús
+
+        // Aplicar impuestos según los checkbox seleccionados
+        inc = $('#aplicar_inc').prop('checked') ? subtotalProductos * (incPorcentaje / 100) : 0;
+        iva = $('#aplicar_iva').prop('checked') ? subtotalMenus * (ivaPorcentaje / 100) : 0;
+
+        let totalImpuesto = inc + iva;
+
+        // Mostrar los valores calculados
+        $('#inc').text(inc.toFixed(2));
+        $('#iva').text(iva.toFixed(2));
+        $('#impuesto').val(totalImpuesto.toFixed(2));
+    }
+
+    function obtenerSubtotalProductos() {
+        let total = 0;
+        $('.producto-subtotal').each(function() {
+            total += parseFloat($(this).text() || 0);
+        });
+        return total;
+    }
+
+    function obtenerSubtotalMenus() {
+        let total = 0;
+        $('.menu-subtotal').each(function() {
+            total += parseFloat($(this).text() || 0);
+        });
+        return total;
+    }
+
     function agregarProducto() {
     console.log("🚀 Intentando agregar producto...");
 
+    // Variables de elementos del DOM
     const productoSelect = document.getElementById("producto_id");
     const menuSelect = document.getElementById("menu_id");
     const cantidadInput = document.getElementById("cantidad");
@@ -370,20 +421,32 @@
         return;
     }
 
-    // Calcular precio_venta (subtotal por fila)
-    let precioVenta = (cantidadProducto * precioProducto) + (cantidadMenu * precioMenu);
-    subtotal[cont] = round(precioVenta);
+    // Calcular precios y subtotal
+    let subtotalProducto = cantidadProducto * precioProducto;
+    let subtotalMenu = cantidadMenu * precioMenu;
+    let subtotalVenta = subtotalProducto + subtotalMenu;
+    
+    subtotal[cont] = round(subtotalVenta);
     sumas += subtotal[cont];
-    inc = round(sumas / 100 * impuesto);
-    total = round(sumas + inc);
 
-    console.log("🟢 Precio de venta calculado:", precioVenta);
+    // Validar impuestos seleccionados
+    let incAplicado = $("#aplicar_inc").is(":checked") ? round(subtotalProducto * 0.08) : 0;
+    let ivaAplicado = $("#aplicar_iva").is(":checked") ? round(subtotalMenu * 0.19) : 0;
+
+    inc = incAplicado;
+    total = round(sumas + inc + ivaAplicado);
+
+    console.log("🟢 Subtotal Producto:", subtotalProducto);
+    console.log("🟢 Subtotal Menú:", subtotalMenu);
+    console.log("🟢 INC Aplicado:", incAplicado);
+    console.log("🟢 IVA Aplicado:", ivaAplicado);
+    console.log("🟡 Evaluando botón de guardar...");
+    console.log("🔹 Total actual:", total);
 
     // Crear la fila
     let fila = `<tr id="fila${cont}">`;
     fila += `<th>${cont + 1}</th>`;
 
-    // Producto
     if (idProducto) {
         fila += `<td><input type="hidden" name="arrayidproducto[]" value="${idProducto}">${nameProducto}</td>`;
         fila += `<td><input type="hidden" name="arraycantidadproducto[]" value="${cantidadProducto}">${cantidadProducto}</td>`;
@@ -392,7 +455,6 @@
         fila += `<td>-</td><td>-</td><td>-</td>`;
     }
 
-    // Menú
     if (idMenu) {
         fila += `<td><input type="hidden" name="arrayidmenu[]" value="${idMenu}">${nameMenu}</td>`;
         fila += `<td><input type="hidden" name="arraycantidadmenu[]" value="${cantidadMenu}">${cantidadMenu}</td>`;
@@ -401,8 +463,7 @@
         fila += `<td>-</td><td>-</td><td>-</td>`;
     }
 
-    fila += `<td><input type="hidden" name="arrayprecioventa[]" value="${precioVenta}">${precioVenta}</td>`;
-    
+    fila += `<td><input type="hidden" name="arrayprecioventa[]" value="${subtotalVenta}">${subtotalVenta}</td>`;
     fila += `<td><button class="btn btn-danger" type="button" onClick="eliminarProducto(${cont})"><i class="fa-solid fa-trash"></i></button></td>`;
     fila += `</tr>`;
 
@@ -410,21 +471,23 @@
     $('#tabla_detalle').append(fila);
     limpiarCampos();
     cont++;
-    disableButtons();
 
     // Actualizar totales
-    if (!isNaN(sumas) && !isNaN(inc) && !isNaN(total)) {
-        $('#sumas').html(sumas.toFixed(2));
-        $('#inc').html(inc.toFixed(2));
-        $('#total').html(total.toFixed(2));
-        $('#impuesto').val(inc.toFixed(2));
-        $('#inputTotal').val(total.toFixed(2));
+    $('#sumas').html(sumas.toFixed(2));
+    $('#inc').html(inc.toFixed(2));
+    $('#iva').html(ivaAplicado.toFixed(2));
+    $('#total').html(total.toFixed(2));
+    $('#impuesto').val(inc.toFixed(2));
+    $('#inputTotal').val(total.toFixed(2));
 
-        $("#precio_venta").val(total.toFixed(2)); // Se actualiza el input global con el total
-    } else {
-        console.warn("⚠️ Error en el cálculo de totales. Verifique los valores ingresados.");
-    }
+    console.log("🔹 Sumas:", sumas, "INC:", inc, "IVA:", ivaAplicado, "Total:", total);
+
+    // Evaluar si mostrar botón
+    disableButtons();
 }
+
+
+
 
 
     function eliminarProducto(indice) {
@@ -482,14 +545,25 @@
     }
 
     function disableButtons() {
-        if (total == 0) {
-            $('#guardar').hide();
-            $('#cancelar').hide();
-        } else {
-            $('#guardar').show();
-            $('#cancelar').show();
-        }
+    console.log("🟡 Evaluando botón de guardar...");
+    
+    // Asegurar que 'total' tiene un valor válido
+    if (isNaN(total) || total < 0) {
+        total = 0;
     }
+
+    console.log("🔹 Total actual:", total);
+
+    if (total == 0) {
+        console.log("❌ Ocultando botón de guardar");
+        $('#guardar').hide();
+        $('#cancelar').hide();
+    } else {
+        console.log("✅ Mostrando botón de guardar");
+        $('#guardar').css("display", "block");  // Asegurar que se muestra
+        $('#cancelar').css("display", "block");
+    }
+}
 
     function limpiarCampos() {
         let select = $('#producto_id');
