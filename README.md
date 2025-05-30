@@ -1,4 +1,4 @@
-# Punto de Venta para una tienda
+# Punto de Venta para restaurante
 
 ## Dependencias
 
