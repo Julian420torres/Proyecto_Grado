@@ -1,7 +1,5 @@
 ---
 
-![Img](https://github.com/SakNoelCode/Imagenes_Proyectos/blob/master/sistemaAbarrotePanel.png)
-
 # Punto de Venta para una tienda
 
 ## Dependencias
