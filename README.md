@@ -1,5 +1,4 @@
 ------------
-![Img](https://github.com/SakNoelCode/Imagenes_Proyectos/blob/master/sistemaAbarrotePanel.png)
 
 # Punto de Venta para una tienda
 
@@ -58,4 +57,4 @@ php artisan db:seed
 php artisan serve
 ```
 ------------
-![Img](https://github.com/SakNoelCode/Imagenes_Proyectos/blob/master/sistemaAbarrotecategory.png)
+
