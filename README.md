@@ -75,5 +75,3 @@ php artisan serve
 ```
 
 ---
-
-![Img](https://github.com/SakNoelCode/Imagenes_Proyectos/blob/master/sistemaAbarrotecategory.png)
