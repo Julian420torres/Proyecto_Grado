@@ -107,13 +107,13 @@
                 @can('ver-menu')
                     <a class="nav-link" href="{{ route('menus.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-utensils"></i></div>
-                        menus
+                        Menus
                     </a>
                 @endcan
 
-                
 
-                
+
+
 
                 @can('ver-producto')
                     <a class="nav-link" href="{{ route('productos.index') }}">
@@ -129,8 +129,8 @@
                     </a>
                 @endcan
 
-                
-                
+
+
 
                 @hasrole('administrador')
                     <div class="sb-sidenav-menu-heading">OTROS</div>
