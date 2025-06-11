@@ -107,7 +107,7 @@
                 @can('ver-menu')
                     <a class="nav-link" href="{{ route('menus.index') }}">
                         <div class="sb-nav-link-icon"><i class="fa-solid fa-utensils"></i></div>
-                        Menus
+                        Menús
                     </a>
                 @endcan
 
