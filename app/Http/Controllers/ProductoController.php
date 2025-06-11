@@ -27,8 +27,8 @@ class ProductoController extends Controller
     public function index()
     {
         $productos = Producto::with(['categorias.caracteristica',])->latest()->get();
-    
-        return view('producto.index',compact('productos'));
+
+        return view('producto.index', compact('productos'));
     }
 
     /**
@@ -36,9 +36,9 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        
 
-        
+
+
 
         $categorias = Categoria::join('caracteristicas as c', 'categorias.caracteristica_id', '=', 'c.id')
             ->select('categorias.id as id', 'c.nombre as nombre')
@@ -70,8 +70,8 @@ class ProductoController extends Controller
                 'descripcion' => $request->descripcion,
                 'fecha_vencimiento' => $request->fecha_vencimiento,
                 'img_path' => $name,
-                
-                
+
+
             ]);
 
             $producto->save();
@@ -102,16 +102,16 @@ class ProductoController extends Controller
      */
     public function edit(Producto $producto)
     {
-        
 
-        
+
+
 
         $categorias = Categoria::join('caracteristicas as c', 'categorias.caracteristica_id', '=', 'c.id')
             ->select('categorias.id as id', 'c.nombre as nombre')
             ->where('c.estado', 1)
             ->get();
 
-        return view('producto.edit',compact('producto','categorias'));
+        return view('producto.edit', compact('producto', 'categorias'));
     }
 
     /**
@@ -119,17 +119,16 @@ class ProductoController extends Controller
      */
     public function update(UpdateProductoRequest $request, Producto $producto)
     {
-        try{
+        try {
             DB::beginTransaction();
 
             if ($request->hasFile('img_path')) {
                 $name = $producto->handleUploadImage($request->file('img_path'));
 
                 //Eliminar si existiese una imagen
-                if(Storage::disk('public')->exists('productos/'.$producto->img_path)){
-                    Storage::disk('public')->delete('productos/'.$producto->img_path);
+                if (Storage::disk('public')->exists('productos/' . $producto->img_path)) {
+                    Storage::disk('public')->delete('productos/' . $producto->img_path);
                 }
-
             } else {
                 $name = $producto->img_path;
             }
@@ -140,8 +139,8 @@ class ProductoController extends Controller
                 'descripcion' => $request->descripcion,
                 'fecha_vencimiento' => $request->fecha_vencimiento,
                 'img_path' => $name,
-                
-                
+
+
             ]);
 
             $producto->save();
@@ -151,11 +150,11 @@ class ProductoController extends Controller
             $producto->categorias()->sync($categorias);
 
             DB::commit();
-        }catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
         }
 
-        return redirect()->route('productos.index')->with('success','Producto editado');
+        return redirect()->route('productos.index')->with('success', 'Producto editado');
     }
 
     /**
